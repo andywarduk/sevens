@@ -25,4 +25,13 @@ impl Results {
     pub fn wins(&self) -> &Vec<usize> {
         &self.wins
     }
+
+    pub fn add(&mut self, other: Results) {
+        self.games += other.games;
+
+        self.wins
+            .iter_mut()
+            .zip(other.wins.iter())
+            .for_each(|(a, b)| *a += *b);
+    }
 }

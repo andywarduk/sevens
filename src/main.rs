@@ -6,9 +6,9 @@ mod cards;
 mod numformat;
 mod play;
 
-use play::{play, State};
+use play::{play, Results, State};
 
-use crate::{cards::Deck, numformat::NumFormat, play::Results};
+use crate::{cards::Deck, numformat::NumFormat};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -26,7 +26,8 @@ pub struct Args {
     debug: bool,
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let args = Args::parse();
 
     // Create the card deck
@@ -48,13 +49,42 @@ fn main() {
     }
 
     println!("Playing games...");
-    let mut results = Results::new(args.player_count);
+    let results = play(args.debug, state).await;
 
-    play(args.debug, state, &mut results);
+    // Print results
+    print_results(&args, results);
+}
 
+fn print_results(args: &Args, results: Results) {
     println!("Games finished: {}", results.games().num_format());
+
+    let player_str = (1..=args.player_count)
+        .map(|p| format!("{}", p))
+        .collect::<Vec<_>>();
+
+    let player_str_len = player_str.iter().map(|s| s.len()).max().unwrap();
+
+    let wins = results
+        .wins()
+        .iter()
+        .map(|w| w.num_format())
+        .collect::<Vec<_>>();
+
+    let wins_len = wins.iter().map(|s| s.len()).max().unwrap();
+
+    let pcts = results
+        .wins()
+        .iter()
+        .map(|w| format!("({:.1}%)", (*w as f32 / results.games() as f32) * 100f32))
+        .collect::<Vec<_>>();
+
+    let pcts_len = pcts.iter().map(|s| s.len()).max().unwrap();
+
     println!("Wins:");
-    for (i, wins) in results.wins().iter().enumerate() {
-        println!("  Player {}: {}", i + 1, wins.num_format());
+    for i in 0..args.player_count as usize {
+        println!(
+            "  Player {:<player_str_len$}: {:>wins_len$} {:>pcts_len$}",
+            player_str[i], wins[i], pcts[i]
+        );
     }
 }
