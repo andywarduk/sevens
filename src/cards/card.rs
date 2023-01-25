@@ -26,12 +26,12 @@ impl Card {
         None
     }
 
-    pub fn new_from_elems(suit: usize, rank: usize) -> Self {
+    pub const fn new_from_elems(suit: usize, rank: usize) -> Self {
         debug_assert!(suit < SUITS.len() && rank < RANKS.len());
         Self(1 << (rank + (suit * 16)))
     }
 
-    pub fn new_from_raw(val: u64) -> Self {
+    pub const fn new_from_raw(val: u64) -> Self {
         Self(val)
     }
 

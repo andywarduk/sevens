@@ -24,7 +24,7 @@ impl State {
         let mut first_player = None;
 
         while let Some(card) = deck.pop() {
-            if card == *SEVEN_HEARTS {
+            if card == SEVEN_HEARTS {
                 first_player = Some(deal_player);
             }
 
@@ -50,11 +50,17 @@ impl State {
 
     pub fn next_player(&mut self) {
         // Move to next player
-        self.cur_player = (self.cur_player + 1) % self.players.len();
+        let mut new_player = self.cur_player + 1;
+
+        if new_player == self.players.len() {
+            new_player = 0;
+        }
+
+        self.cur_player = new_player;
     }
 
     pub fn play_card(&mut self, card: Card) {
-        if card == *SEVEN_HEARTS {
+        if card == SEVEN_HEARTS {
             self.plays.add(Card::new(&'♣', "7").unwrap());
             self.plays.add(Card::new(&'♦', "7").unwrap());
             self.plays.add(Card::new(&'♠', "7").unwrap());
