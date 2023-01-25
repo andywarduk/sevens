@@ -1,6 +1,27 @@
 # Sevens
 
+Simulation for the card game Sevens, also known as Domino, Spoof, Fan Tan and Parliament.
 <https://en.wikipedia.org/wiki/Domino_(card_game)>
+
+## Running
+
+### Release build
+
+```sh
+cargo run --release -- <arguments>
+```
+
+### Debug build
+
+```sh
+cargo run -- <arguments>
+```
+
+### Tracing
+
+```sh
+cargo run -F trace -- <arguments>
+```
 
 ## Results
 
@@ -12,7 +33,7 @@ All runs performed on "Intel(R) Core(TM) i7-10700F CPU @ 2.90GHz" (Comet Lake). 
 cargo run --release -- --no-shuffle -p 4
 ```
 
-Processing time:
+Processing time: ~28 hours, ~18 days user time (!)
 
 ```sh
 Player cards:
@@ -20,6 +41,12 @@ Player cards:
   Player 2: 2♥ 6♥ 10♥ A♣ 5♣ 9♣ K♣ 4♦ 8♦ Q♦ 3♠ 7♠ J♠
   Player 3: 3♥ 7♥ J♥ 2♣ 6♣ 10♣ A♦ 5♦ 9♦ K♦ 4♠ 8♠ Q♠
   Player 4: 4♥ 8♥ Q♥ 3♣ 7♣ J♣ 2♦ 6♦ 10♦ A♠ 5♠ 9♠ K♠
+Games finished: 2,047,791,306,614
+Wins:
+  Player 1: 575,177,024,138
+  Player 2: 449,232,150,143
+  Player 3: 509,672,376,322
+  Player 4: 513,709,756,011
 ```
 
 ### 5 players, no shuffle

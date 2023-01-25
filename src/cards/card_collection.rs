@@ -12,6 +12,15 @@ impl CardCollection {
         Self(card.raw())
     }
 
+    pub fn new_from_raw(value: u64) -> Self {
+        Self(value)
+    }
+
+    #[inline]
+    pub fn set(&mut self, card: Card) {
+        self.0 = card.raw();
+    }
+
     #[inline]
     pub fn add(&mut self, card: Card) {
         self.0 |= card.raw();
@@ -40,6 +49,11 @@ impl CardCollection {
     pub fn len(&self) -> usize {
         self.0.count_ones() as usize
     }
+
+    #[inline]
+    pub fn raw(&self) -> u64 {
+        self.0
+    }
 }
 
 impl std::fmt::Display for CardCollection {
@@ -51,7 +65,7 @@ impl std::fmt::Display for CardCollection {
                 string += " ";
             }
 
-            string += &format!("{}", c);
+            string += &format!("{c}");
         }
 
         f.write_str(&string)
@@ -64,11 +78,10 @@ impl Iterator for CardCollectionIterator {
     type Item = Card;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let next_pos = self.0.trailing_zeros();
-
-        if next_pos == 64 {
+        if self.0 == 0 {
             None
         } else {
+            let next_pos = self.0.trailing_zeros();
             let next = 1 << next_pos;
             self.0 &= !next;
             Some(Card::new_from_raw(next))
@@ -101,9 +114,9 @@ mod tests {
 
         while let Some(card) = deck.pop() {
             if card == card1 || card == card2 || card == card3 || card == card4 {
-                assert_eq!(true, collection.contains(card.clone()));
+                assert!(collection.contains(card.clone()));
             } else {
-                assert_eq!(false, collection.contains(card.clone()));
+                assert!(!collection.contains(card.clone()));
             }
         }
 
@@ -124,9 +137,9 @@ mod tests {
 
         while let Some(card) = deck.pop() {
             if card == card3 || card == card4 {
-                assert_eq!(true, collection.contains(card.clone()));
+                assert!(collection.contains(card.clone()));
             } else {
-                assert_eq!(false, collection.contains(card.clone()));
+                assert!(!collection.contains(card.clone()));
             }
         }
 
@@ -137,7 +150,7 @@ mod tests {
         let mut deck = Deck::new();
 
         while let Some(card) = deck.pop() {
-            assert_eq!(false, collection.contains(card.clone()));
+            assert!(!collection.contains(card.clone()));
         }
     }
 }

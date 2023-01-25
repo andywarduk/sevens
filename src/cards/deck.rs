@@ -22,7 +22,7 @@ impl Deck {
 
         let mut rng = rand::thread_rng();
 
-        while self.0.len() > 0 {
+        while !self.0.is_empty() {
             let elem = rng.gen_range(0..self.0.len());
             let card = self.0.remove(elem).unwrap();
             shuffled.push_back(card);
@@ -45,7 +45,7 @@ impl std::fmt::Display for Deck {
                 string += " ";
             }
 
-            string += &format!("{}", c);
+            string += &format!("{c}");
         }
 
         f.write_str(&string)
@@ -82,6 +82,6 @@ mod tests {
             expected.swap_remove(index);
         }
 
-        assert!(expected.len() == 0);
+        assert!(expected.is_empty());
     }
 }

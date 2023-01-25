@@ -3,10 +3,10 @@
 use clap::Parser;
 
 mod cards;
+mod game;
 mod numformat;
-mod play;
 
-use play::{play, Results, State};
+use game::{play::play, Results, State};
 
 use crate::{cards::Deck, numformat::NumFormat};
 
@@ -20,10 +20,6 @@ pub struct Args {
     /// Don't shuffle the cards
     #[arg(short, long)]
     no_shuffle: bool,
-
-    /// Debug
-    #[arg(short, long)]
-    debug: bool,
 }
 
 #[tokio::main]
@@ -38,18 +34,18 @@ async fn main() {
         deck.shuffle();
     }
 
-    println!("Card deck: {}", deck);
+    println!("Card deck: {deck}");
 
     // Play
     let state = State::new(args.player_count, deck);
 
     println!("Player cards:");
     for (i, p) in state.players.iter().enumerate() {
-        println!("  Player {}: {}", i + 1, p.cards);
+        println!("  Player {}: {}", i + 1, p);
     }
 
     println!("Playing games...");
-    let results = play(args.debug, state).await;
+    let results = play(state).await;
 
     // Print results
     print_results(&args, results);
@@ -59,7 +55,7 @@ fn print_results(args: &Args, results: Results) {
     println!("Games finished: {}", results.games().num_format());
 
     let player_str = (1..=args.player_count)
-        .map(|p| format!("{}", p))
+        .map(|p| format!("{p}"))
         .collect::<Vec<_>>();
 
     let player_str_len = player_str.iter().map(|s| s.len()).max().unwrap();

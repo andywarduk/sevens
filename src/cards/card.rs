@@ -27,7 +27,7 @@ impl Card {
     }
 
     pub fn new_from_elems(suit: usize, rank: usize) -> Self {
-        assert!(suit < SUITS.len() && rank < RANKS.len());
+        debug_assert!(suit < SUITS.len() && rank < RANKS.len());
         Self(1 << (rank + (suit * 16)))
     }
 
@@ -36,33 +36,19 @@ impl Card {
     }
 
     pub fn suit(&self) -> char {
-        SUITS[self.suit_elem()]
+        SUITS[self.suit_elem() as usize]
     }
 
     pub fn rank(&self) -> &str {
-        RANKS[self.rank_elem()]
+        RANKS[self.rank_elem() as usize]
     }
 
-    pub fn suit_elem(&self) -> usize {
-        let mut suit = 0;
-        let mut shifted = self.0;
-
-        while shifted & 0xffff == 0 {
-            shifted >>= 16;
-            suit += 1;
-        }
-
-        suit
+    pub fn suit_elem(&self) -> u32 {
+        self.0.trailing_zeros() >> 4
     }
 
-    pub fn rank_elem(&self) -> usize {
-        let mut shifted = self.0;
-
-        while shifted & 0xffff == 0 {
-            shifted >>= 16;
-        }
-
-        15 - ((shifted & 0xffff) as u16).leading_zeros() as usize
+    pub fn rank_elem(&self) -> u32 {
+        self.0.trailing_zeros() & 0xf
     }
 
     pub fn higher(&self) -> Card {
@@ -87,13 +73,13 @@ mod tests {
     fn test1() {
         for (sno, suit) in SUITS.iter().enumerate() {
             for (rno, rank) in RANKS.iter().enumerate() {
-                let card = Card::new(&suit, rank).unwrap();
+                let card = Card::new(suit, rank).unwrap();
 
-                assert_eq!(format!("{}{}", rank, suit), format!("{}", card));
+                assert_eq!(format!("{rank}{suit}"), format!("{card}"));
                 assert_eq!(&card.rank(), rank);
                 assert_eq!(&card.suit(), suit);
-                assert_eq!(card.rank_elem(), rno);
-                assert_eq!(card.suit_elem(), sno);
+                assert_eq!(card.rank_elem(), rno as u32);
+                assert_eq!(card.suit_elem(), sno as u32);
 
                 let card2 = Card::new_from_elems(sno, rno);
                 assert_eq!(card, card2);

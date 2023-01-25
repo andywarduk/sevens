@@ -1,6 +1,5 @@
-mod play;
-mod player;
-mod results;
+pub mod play;
+pub mod results;
 mod state;
 
 use lazy_static::lazy_static;
