@@ -43,18 +43,22 @@ impl Card {
         RANKS[self.rank_elem() as usize]
     }
 
+    #[inline]
     pub fn suit_elem(&self) -> u32 {
         self.0.trailing_zeros() >> 4
     }
 
+    #[inline]
     pub fn rank_elem(&self) -> u32 {
         self.0.trailing_zeros() & 0xf
     }
 
+    #[inline]
     pub fn higher(&self) -> Card {
         Card(self.0 << 1)
     }
 
+    #[inline]
     pub fn lower(&self) -> Card {
         Card(self.0 >> 1)
     }

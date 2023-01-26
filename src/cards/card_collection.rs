@@ -36,8 +36,8 @@ impl CardCollection {
         self.0 & card.raw() != 0
     }
 
-    pub fn iter(&self) -> CardCollectionIterator {
-        CardCollectionIterator(self.0)
+    pub fn card_iterator(&self) -> CardCollectionIterator {
+        CardCollectionIterator(self.0 as i64)
     }
 
     #[inline]
@@ -60,7 +60,7 @@ impl std::fmt::Display for CardCollection {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut string = String::new();
 
-        for (i, c) in self.iter().enumerate() {
+        for (i, c) in self.card_iterator().enumerate() {
             if i > 0 {
                 string += " ";
             }
@@ -72,7 +72,7 @@ impl std::fmt::Display for CardCollection {
     }
 }
 
-pub struct CardCollectionIterator(u64);
+pub struct CardCollectionIterator(i64);
 
 impl Iterator for CardCollectionIterator {
     type Item = Card;
@@ -81,10 +81,14 @@ impl Iterator for CardCollectionIterator {
         if self.0 == 0 {
             None
         } else {
-            let next_pos = self.0.trailing_zeros();
-            let next = 1 << next_pos;
+            // Get the least significant bit
+            let next = self.0 & -self.0;
+
+            // Remove from self
             self.0 &= !next;
-            Some(Card::new_from_raw(next))
+
+            // Return card
+            Some(Card::new_from_raw(next as u64))
         }
     }
 }
@@ -121,7 +125,7 @@ mod tests {
         }
 
         // Test iterating cards
-        let mut iter = collection.iter();
+        let mut iter = collection.card_iterator();
 
         assert_eq!(iter.next(), Some(card1.clone()));
         assert_eq!(iter.next(), Some(card2.clone()));

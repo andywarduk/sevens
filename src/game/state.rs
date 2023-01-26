@@ -9,7 +9,6 @@ pub struct State {
     pub plays: CardCollection,
     pub players: Vec<CardCollection>,
     cur_player: usize,
-    pub depth: usize,
 }
 
 impl State {
@@ -39,7 +38,6 @@ impl State {
             plays: CardCollection::new_single(SEVEN_HEARTS.clone()),
             players,
             cur_player: first_player.expect("Player with 7♥ not found") as usize,
-            depth: 0,
         }
     }
 

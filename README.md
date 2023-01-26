@@ -66,11 +66,11 @@ Player cards:
   Player 5: 5♥ 10♥ 2♣ 7♣ Q♣ 4♦ 9♦ A♠ 6♠ J♠
 Games finished: 2,533,603,730
 Wins:
-  Player 1:   253,055,454
-  Player 2:    63,117,679
-  Player 3: 1,190,431,433
-  Player 4:   681,264,915
-  Player 5:   345,734,249
+  Player 1:   253,055,454 (10.0%)
+  Player 2:    63,117,679  (2.5%)
+  Player 3: 1,190,431,433 (47.0%)
+  Player 4:   681,264,915 (26.9%)
+  Player 5:   345,734,249 (13.6%)
 ```
 
 ### 6 players, no shuffle
@@ -91,10 +91,10 @@ Player cards:
   Player 6: 6♥ Q♥ 5♣ J♣ 4♦ 10♦ 3♠ 9♠
 Games finished: 54,490,026
 Wins:
-  Player 1:  4,572,185
-  Player 2:  2,277,843
-  Player 3:  2,297,733
-  Player 4:    377,723
-  Player 5: 17,284,352
-  Player 6: 27,680,190
+  Player 1:  4,572,185  (8.4%)
+  Player 2:  2,277,843  (4.2%)
+  Player 3:  2,297,733  (4.2%)
+  Player 4:    377,723  (0.7%)
+  Player 5: 17,284,352 (31.7%)
+  Player 6: 27,680,190 (50.8%)
 ```
