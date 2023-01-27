@@ -13,7 +13,7 @@ pub fn play(mut state: State) -> BoxFuture<'static, Results> {
         let mut join_set = JoinSet::new();
 
         #[cfg(feature = "trace")]
-        println!("-- Depth {}", state.depth);
+        println!("-- Start --");
 
         'outer: loop {
             'inner: {
@@ -172,7 +172,7 @@ pub fn play(mut state: State) -> BoxFuture<'static, Results> {
         }
 
         #[cfg(feature = "trace")]
-        println!("-----------");
+        println!("-- End --");
 
         // Join threads
         while let Some(res) = join_set.join_next().await {
