@@ -1,5 +1,7 @@
 #![feature(portable_simd)]
 
+use std::process::exit;
+
 use clap::Parser;
 
 mod cards;
@@ -20,6 +22,10 @@ pub struct Args {
     /// Don't shuffle the cards
     #[arg(short, long)]
     no_shuffle: bool,
+
+    /// Deck hash
+    #[arg(short, long)]
+    deck_hash: Option<String>,
 }
 
 #[tokio::main]
@@ -27,14 +33,28 @@ async fn main() {
     let args = Args::parse();
 
     // Create the card deck
-    let mut deck = Deck::new();
+    let deck = if let Some(hash) = &args.deck_hash {
+        let deck = Deck::new_from_hash(hash);
 
-    // Shuffle the deck
-    if !args.no_shuffle {
-        deck.shuffle();
-    }
+        if deck.is_none() {
+            println!("Card deck hash {hash} is not valid");
+            exit(1);
+        }
+
+        deck.unwrap()
+    } else {
+        let mut deck = Deck::new();
+
+        // Shuffle the deck
+        if !args.no_shuffle {
+            deck.shuffle();
+        }
+
+        deck
+    };
 
     println!("Card deck: {deck}");
+    println!("Card deck hash: {}", deck.hash_string());
 
     // Play
     let state = State::new(args.player_count, deck);

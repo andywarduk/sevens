@@ -1,4 +1,4 @@
-use super::{RANKS, SUITS};
+use super::{CARD_HASH, RANKS, SUITS};
 
 #[derive(Clone, PartialEq)]
 pub struct Card(u64);
@@ -31,6 +31,17 @@ impl Card {
         Self(1 << (rank + (suit * 16)))
     }
 
+    pub fn new_from_hash(hash: u8) -> Option<Self> {
+        match CARD_HASH.iter().position(|h| *h == hash) {
+            Some(p) => {
+                let suit = p / 13;
+                let rank = p % 13;
+                Some(Self::new_from_elems(suit, rank))
+            }
+            None => None,
+        }
+    }
+
     pub const fn new_from_raw(val: u64) -> Self {
         Self(val)
     }
@@ -41,6 +52,10 @@ impl Card {
 
     pub fn rank(&self) -> &str {
         RANKS[self.rank_elem() as usize]
+    }
+
+    pub fn hash_val(&self) -> char {
+        CARD_HASH[((self.suit_elem() as usize * 13) + self.rank_elem() as usize)] as char
     }
 
     #[inline]

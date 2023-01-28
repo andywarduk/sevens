@@ -2,7 +2,8 @@
 
 dir=`pwd`/pgo_data
 
-mkdir -p $dir
+rm -rf "$dir"
+mkdir -p "$dir"
 
 RUSTFLAGS="-Cprofile-generate=$dir" \
     cargo build --release --target=x86_64-unknown-linux-gnu

@@ -2,7 +2,7 @@ use std::collections::VecDeque;
 
 use rand::Rng;
 
-use super::{Card, RANKS, SUITS};
+use super::{Card, CARD_HASH, RANKS, SUITS};
 
 #[derive(Debug)]
 pub struct Deck(VecDeque<Card>);
@@ -15,6 +15,34 @@ impl Deck {
                 cards
             })
         }))
+    }
+
+    pub fn new_from_hash(hash: &str) -> Option<Self> {
+        let mut touched = [false; 52];
+
+        if let Some(cards) = hash
+            .chars()
+            .map(|c| match CARD_HASH.iter().position(|h| *h as char == c) {
+                None => None,
+                Some(p) => {
+                    touched[p] = true;
+                    Card::new_from_hash(c as u8)
+                }
+            })
+            .collect()
+        {
+            if touched.into_iter().any(|t| !t) {
+                // Not all cards specified
+                println!("HERE1");
+                None
+            } else {
+                Some(Self(cards))
+            }
+        } else {
+            // Invalid character
+            println!("HERE2");
+            None
+        }
     }
 
     pub fn shuffle(&mut self) {
@@ -33,6 +61,10 @@ impl Deck {
 
     pub fn pop(&mut self) -> Option<Card> {
         self.0.pop_front()
+    }
+
+    pub fn hash_string(&self) -> String {
+        self.0.iter().map(|c| c.hash_val()).collect()
     }
 }
 
