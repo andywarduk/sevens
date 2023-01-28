@@ -121,6 +121,44 @@ Order: 7♦ A♠ A♥ 6♠ 9♠ 3♣ Q♣ 3♠ 8♥ 6♥ 7♠ 10♠ K♠ 6♦ 10
 
 Hash: gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG
 
+#### 2 Players
+
+```sh
+./run_x86linuxgnu.sh -p 2 -d gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG
+```
+
+Processing time: ~6 minutes 25 seconds, user time ~1 hour 42 minutes
+
+```sh
+Player cards:
+  Player 1: A♥ 4♥ 8♥ K♥ 2♣ 4♣ 6♣ 7♣ 10♣ Q♣ K♣ A♦ 2♦ 3♦ 4♦ 5♦ 7♦ 9♦ 10♦ K♦ 2♠ 7♠ 8♠ 9♠ Q♠ K♠
+  Player 2: 2♥ 3♥ 5♥ 6♥ 7♥ 9♥ 10♥ J♥ Q♥ A♣ 3♣ 5♣ 8♣ 9♣ J♣ 6♦ 8♦ J♦ Q♦ A♠ 3♠ 4♠ 5♠ 6♠ 10♠ J♠
+Games finished: 17,884,560,906
+Wins:
+  Player 1:  6,963,092,100 (38.9%)
+  Player 2: 10,921,468,806 (61.1%)
+```
+
+#### 3 players
+
+```sh
+./run_x86linuxgnu.sh -p 3 -d gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG
+```
+
+Processing time: ~26 seconds, ~6 minutes 50 seconds user time
+
+```sh
+Player cards:
+  Player 1: 6♥ 7♥ 9♥ 10♥ K♥ A♣ 2♣ 5♣ 6♣ 8♣ Q♣ 3♦ 5♦ 7♦ 6♠ J♠ Q♠ K♠
+  Player 2: 2♥ 5♥ 7♣ 9♣ 10♣ J♣ A♦ 2♦ 4♦ 6♦ J♦ K♦ A♠ 3♠ 5♠ 7♠ 9♠
+  Player 3: A♥ 3♥ 4♥ 8♥ J♥ Q♥ 3♣ 4♣ K♣ 8♦ 9♦ 10♦ Q♦ 2♠ 4♠ 8♠ 10♠
+Games finished: 1,486,039,225
+Wins:
+  Player 1: 227,331,479 (15.3%)
+  Player 2: 794,951,011 (53.5%)
+  Player 3: 463,756,735 (31.2%)
+```
+
 #### 4 players
 
 ```sh
