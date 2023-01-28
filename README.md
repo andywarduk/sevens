@@ -11,6 +11,19 @@ Simulation for the card game Sevens, also known as Domino, Spoof, Fan Tan and Pa
 cargo run --release -- <arguments>
 ```
 
+### PGO (Profile Guided Optimisation) build
+
+```sh
+./build_x86linuxgnu.sh
+./run_x86linuxgnu.sh <arguments>
+```
+
+To regenerate PGO data:
+
+```sh
+./buildpgo_x86linuxgnu.sh
+```
+
 ### Debug build
 
 ```sh
@@ -27,13 +40,13 @@ cargo run -F trace -- <arguments>
 
 All runs performed on "Intel(R) Core(TM) i7-10700F CPU @ 2.90GHz" (Comet Lake). 8 cores / 16 threads. Max frequency 4.80 GHz.
 
-### 4 players, no shuffle
+### PGO build, 4 players, no shuffle
 
 ```sh
-cargo run --release -- --no-shuffle -p 4
+./run_x86linuxgnu.sh --no-shuffle -p 4
 ```
 
-Processing time: ~28 hours, ~18 days user time (!)
+Processing time: ~13 hrs real, ~8.8 days user
 
 ```sh
 Player cards:
@@ -43,19 +56,19 @@ Player cards:
   Player 4: 4♥ 8♥ Q♥ 3♣ 7♣ J♣ 2♦ 6♦ 10♦ A♠ 5♠ 9♠ K♠
 Games finished: 2,047,791,306,614
 Wins:
-  Player 1: 575,177,024,138
-  Player 2: 449,232,150,143
-  Player 3: 509,672,376,322
-  Player 4: 513,709,756,011
+  Player 1: 575,177,024,138 (28.1%)
+  Player 2: 449,232,150,143 (21.9%)
+  Player 3: 509,672,376,322 (24.9%)
+  Player 4: 513,709,756,011 (25.1%)
 ```
 
-### 5 players, no shuffle
+### PGO build, 5 players, no shuffle
 
 ```sh
-cargo run --release -- --no-shuffle -p 5
+./run_x86linuxgnu.sh --no-shuffle -p 5
 ```
 
-Processing time: ~2 minutes real, ~30 minutes user
+Processing time: ~1 minute real, ~15 minutes user
 
 ```sh
 Player cards:
@@ -73,13 +86,13 @@ Wins:
   Player 5:   345,734,249 (13.6%)
 ```
 
-### 6 players, no shuffle
+### PGO build, 6 players, no shuffle
 
 ```sh
-cargo run --release -- --no-shuffle -p 6
+./run_x86linuxgnu.sh --no-shuffle -p 6
 ```
 
-Processing time: ~2.5 seconds real, ~33 seconds user
+Processing time: ~4.3 seconds real, ~9 seconds user
 
 ```sh
 Player cards:

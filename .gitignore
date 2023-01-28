@@ -2,3 +2,4 @@
 flamegraph.svg
 .DS_Store
 perf.data*
+pgo_data
