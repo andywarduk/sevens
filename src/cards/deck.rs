@@ -1,4 +1,4 @@
-use std::collections::VecDeque;
+use std::collections::{vec_deque::Iter, VecDeque};
 
 use rand::Rng;
 
@@ -65,6 +65,10 @@ impl Deck {
 
     pub fn hash_string(&self) -> String {
         self.0.iter().map(|c| c.hash_val()).collect()
+    }
+
+    pub fn iter(&self) -> Iter<Card> {
+        self.0.iter()
     }
 }
 

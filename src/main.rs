@@ -10,7 +10,10 @@ mod numformat;
 
 use game::{play::play, Results, State};
 
-use crate::{cards::Deck, numformat::NumFormat};
+use crate::{
+    cards::{print_cards, Deck},
+    numformat::NumFormat,
+};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -53,7 +56,7 @@ async fn main() {
         deck
     };
 
-    println!("Card deck: {deck}");
+    print_cards(deck.iter().cloned(), "Card deck:");
     println!("Card deck hash: {}", deck.hash_string());
 
     // Play
@@ -61,7 +64,7 @@ async fn main() {
 
     println!("Player cards:");
     for (i, p) in state.players.iter().enumerate() {
-        println!("  Player {}: {}", i + 1, p);
+        print_cards(p.card_iterator(), &format!("  Player {}:", i + 1));
     }
 
     println!("Playing games...");

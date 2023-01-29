@@ -1,4 +1,6 @@
-use super::{CARD_HASH, RANKS, SUITS};
+use colored::*;
+
+use super::{CARD_HASH, RANKS, SUITS, SUIT_COLOUR};
 
 #[derive(Clone, PartialEq)]
 pub struct Card(u64);
@@ -81,6 +83,14 @@ impl Card {
     #[inline]
     pub fn raw(&self) -> u64 {
         self.0
+    }
+
+    pub const CARD_COLOURED_WIDTH: usize = 5;
+
+    pub fn coloured(&self) -> ColoredString {
+        format!(" {:<2}{} ", self.rank(), self.suit())
+            .color(SUIT_COLOUR[self.suit_elem() as usize])
+            .on_bright_white()
     }
 }
 
