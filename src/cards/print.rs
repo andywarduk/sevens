@@ -27,6 +27,7 @@ fn print_cards_plain(iterator: impl Iterator<Item = Card>, title: &str) {
     for c in iterator {
         print!(" {c}");
     }
+    println!();
 }
 
 fn print_cards_formatted(iterator: impl Iterator<Item = Card>, title: &str, width: usize) {
