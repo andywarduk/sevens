@@ -64,8 +64,8 @@ impl State {
             self.plays.add(Card::new(&'♠', "7").unwrap());
         }
 
-        self.plays.add(card.lower());
-        self.plays.add(card.higher());
+        self.plays.add(card.one_lower());
+        self.plays.add(card.one_higher());
 
         self.players[self.cur_player].remove(card.clone());
 

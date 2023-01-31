@@ -71,12 +71,12 @@ impl Card {
     }
 
     #[inline]
-    pub fn higher(&self) -> Card {
+    pub fn one_higher(&self) -> Card {
         Card(self.0 << 1)
     }
 
     #[inline]
-    pub fn lower(&self) -> Card {
+    pub fn one_lower(&self) -> Card {
         Card(self.0 >> 1)
     }
 
@@ -127,8 +127,8 @@ mod tests {
                 let lower = Card::new_from_elems(sno, rno - 1);
                 let higher = Card::new_from_elems(sno, rno + 1);
 
-                assert_eq!(card.higher(), higher);
-                assert_eq!(card.lower(), lower);
+                assert_eq!(card.one_higher(), higher);
+                assert_eq!(card.one_lower(), lower);
             }
         }
     }

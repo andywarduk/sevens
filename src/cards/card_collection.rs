@@ -17,11 +17,6 @@ impl CardCollection {
     }
 
     #[inline]
-    pub fn set(&mut self, card: Card) {
-        self.0 = card.raw();
-    }
-
-    #[inline]
     pub fn add(&mut self, card: Card) {
         self.0 |= card.raw();
     }
@@ -34,6 +29,23 @@ impl CardCollection {
     #[inline]
     pub fn contains(&self, card: Card) -> bool {
         self.0 & card.raw() != 0
+    }
+
+    #[inline]
+    pub fn contains_one_to_six_except(&self, suit: u32, card: &Card) -> bool {
+        self.0 & (0x3f << (suit * 16)) != card.raw()
+    }
+
+    #[inline]
+    pub fn contains_eight_to_king_except(&self, suit: u32, card: &Card) -> bool {
+        self.0 & (0x1f80 << (suit * 16)) != card.raw()
+    }
+
+    #[inline]
+    pub fn set_first(&mut self) {
+        // Get the least significant bit
+        let first = (self.0 as i64) & -(self.0 as i64);
+        self.0 = first as u64;
     }
 
     pub fn card_iterator(&self) -> CardCollectionIterator {
@@ -114,6 +126,17 @@ mod tests {
         collection.add(card3.clone());
         collection.add(card4.clone());
 
+        // Test contains A-6 and 8-K
+        assert!(collection.contains_one_to_six_except(0, &card2));
+        assert!(!collection.contains_eight_to_king_except(0, &card2));
+        assert!(!collection.contains_one_to_six_except(1, &card2));
+        assert!(!collection.contains_eight_to_king_except(1, &card2));
+        assert!(!collection.contains_one_to_six_except(2, &card2));
+        assert!(collection.contains_eight_to_king_except(2, &card2));
+        assert!(!collection.contains_one_to_six_except(3, &card2));
+        assert!(collection.contains_eight_to_king_except(3, &card2));
+
+        // Test contains
         let mut deck = Deck::new();
 
         while let Some(card) = deck.pop() {
