@@ -57,7 +57,7 @@ impl Card {
     }
 
     pub fn hash_val(&self) -> char {
-        CARD_HASH[((self.suit_elem() as usize * 13) + self.rank_elem() as usize)] as char
+        CARD_HASH[(self.suit_elem() as usize * 13) + self.rank_elem() as usize] as char
     }
 
     #[inline]

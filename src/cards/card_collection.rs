@@ -42,10 +42,10 @@ impl CardCollection {
     }
 
     #[inline]
-    pub fn set_first(&mut self) {
+    pub fn first(&self) -> u64 {
         // Get the least significant bit
         let first = (self.0 as i64) & -(self.0 as i64);
-        self.0 = first as u64;
+        first as u64
     }
 
     pub fn card_iterator(&self) -> CardCollectionIterator {

@@ -1,17 +1,18 @@
-#![feature(portable_simd)]
+#![feature(stmt_expr_attributes)]
 
 use std::process::exit;
+use std::time::Instant;
 
 use clap::Parser;
+use simple_process_stats::ProcessStats;
 
 mod cards;
 mod game;
 mod numformat;
 
-use game::{play::play, Results, State};
-
 use crate::{
     cards::{print_cards, Deck},
+    game::{play, Results, State, Strategy},
     numformat::NumFormat,
 };
 
@@ -29,6 +30,10 @@ pub struct Args {
     /// Deck hash
     #[arg(short, long)]
     deck_hash: Option<String>,
+
+    /// Strategy
+    #[arg(short, long, value_enum, default_value_t = Strategy::Preferred)]
+    strategy: Strategy,
 }
 
 #[tokio::main]
@@ -68,7 +73,25 @@ async fn main() {
     }
 
     println!("Playing games...");
-    let results = play(state).await;
+
+    let process_stats_start = ProcessStats::get()
+        .await
+        .expect("could not get stats for running process");
+    let start = Instant::now();
+
+    let results = play(state, args.strategy).await;
+
+    let duration = start.elapsed();
+    let process_stats_end = ProcessStats::get()
+        .await
+        .expect("could not get stats for running process");
+
+    println!("Time elapsed: {duration:?}");
+    println!(
+        "Process time: {:?} user, {:?} kernel",
+        process_stats_end.cpu_time_user - process_stats_start.cpu_time_user,
+        process_stats_end.cpu_time_kernel - process_stats_start.cpu_time_kernel
+    );
 
     // Print results
     print_results(&args, results);
@@ -83,18 +106,50 @@ fn print_results(args: &Args, results: Results) {
 
     let player_str_len = player_str.iter().map(|s| s.len()).max().unwrap();
 
+    #[cfg(not(feature = "nostats"))]
+    {
+        // Print plays
+        print!("Plays    {:<player_str_len$}:", "");
+
+        for i in 0..=args.strategy.max_pref_rank() {
+            print!(" {:>12} >1", args.strategy.pref_rank_desc(i));
+            print!(" {:>13} 1", args.strategy.pref_rank_desc(i));
+        }
+        println!(" {:>15}", "Missed Goes");
+
+        for (i, player_results) in results.player_results().iter().enumerate() {
+            print!("  Player {:<player_str_len$}:", player_str[i]);
+
+            for i in 0..=args.strategy.max_pref_rank() {
+                print!(
+                    " {:>15} {:>15}",
+                    player_results.multi[i as usize].num_format(),
+                    player_results.single[i as usize].num_format()
+                );
+            }
+
+            println!(" {:>15}", player_results.misses.num_format());
+        }
+    }
+
+    // Print wins
     let wins = results
-        .wins()
+        .player_results()
         .iter()
-        .map(|w| w.num_format())
+        .map(|w| w.wins.num_format())
         .collect::<Vec<_>>();
 
     let wins_len = wins.iter().map(|s| s.len()).max().unwrap();
 
     let pcts = results
-        .wins()
+        .player_results()
         .iter()
-        .map(|w| format!("({:.1}%)", (*w as f32 / results.games() as f32) * 100f32))
+        .map(|w| {
+            format!(
+                "({:.1}%)",
+                (w.wins as f32 / results.games() as f32) * 100f32
+            )
+        })
         .collect::<Vec<_>>();
 
     let pcts_len = pcts.iter().map(|s| s.len()).max().unwrap();

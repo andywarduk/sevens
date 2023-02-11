@@ -33,14 +33,12 @@ impl Deck {
         {
             if touched.into_iter().any(|t| !t) {
                 // Not all cards specified
-                println!("HERE1");
                 None
             } else {
                 Some(Self(cards))
             }
         } else {
             // Invalid character
-            println!("HERE2");
             None
         }
     }

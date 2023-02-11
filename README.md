@@ -40,13 +40,14 @@ cargo run -F trace -- <arguments>
 
 All runs performed on "Intel(R) Core(TM) i7-10700F CPU @ 2.90GHz" (Comet Lake). 8 cores / 16 threads. Max frequency 4.80 GHz.
 PGO build used for all tests.
+'No consequence' strategy used
 
 ### No shuffle
 
 #### 4 players
 
 ```sh
-./run_x86linuxgnu.sh --no-shuffle -p 4
+./run_x86linuxgnu.sh --no-shuffle -p 4 -s no-consequence
 ```
 
 Processing time: ~9.5 minutes real, ~2.5 hours user
@@ -68,7 +69,7 @@ Wins:
 #### 5 players
 
 ```sh
-./run_x86linuxgnu.sh --no-shuffle -p 5
+./run_x86linuxgnu.sh --no-shuffle -p 5 -s no-consequence
 ```
 
 Processing time: ~3.6 seconds real, ~57 seconds user
@@ -92,7 +93,7 @@ Wins:
 #### 6 players
 
 ```sh
-./run_x86linuxgnu.sh --no-shuffle -p 6
+./run_x86linuxgnu.sh --no-shuffle -p 6 -s no-consequence
 ```
 
 Processing time: ~0.6 seconds real, ~9 seconds user
@@ -124,7 +125,7 @@ Hash: gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG
 #### 2 Players
 
 ```sh
-./run_x86linuxgnu.sh -p 2 -d gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG
+./run_x86linuxgnu.sh -p 2 -d gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG -s no-consequence
 ```
 
 Processing time: ~1.5 seconds real, 24 seconds user
@@ -142,7 +143,7 @@ Wins:
 #### 3 players
 
 ```sh
-./run_x86linuxgnu.sh -p 3 -d gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG
+./run_x86linuxgnu.sh -p 3 -d gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG -s no-consequence
 ```
 
 Processing time: ~0.01 seconds real, ~0.14 seconds user
@@ -162,7 +163,7 @@ Wins:
 #### 4 players
 
 ```sh
-./run_x86linuxgnu.sh -p 4 -d gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG
+./run_x86linuxgnu.sh -p 4 -d gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG -s no-consequence
 ```
 
 Processing time: ~0.1 seconds real, ~0.5 seconds user
@@ -184,7 +185,7 @@ Wins:
 #### 5 players
 
 ```sh
-./run_x86linuxgnu.sh -p 5 -d gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG
+./run_x86linuxgnu.sh -p 5 -d gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG -s no-consequence
 ```
 
 Processing time: ~0.005 seconds real, ~0.006 seconds user
@@ -208,7 +209,7 @@ Wins:
 #### 6 players
 
 ```sh
-./run_x86linuxgnu.sh -p 6 -d gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG
+./run_x86linuxgnu.sh -p 6 -d gnAsvPYpHFtwzfjRWlerQITLMEZNdCOVoUahSkuxbKyBiJmqcXDG -s no-consequence
 ```
 
 Processing time: ~0.008 seconds real, ~0.045 seconds user
