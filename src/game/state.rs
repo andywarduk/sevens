@@ -16,6 +16,8 @@ pub struct State {
     cur_player: usize,
     /// Player cards
     player_cards: Vec<CardCollection>,
+    #[cfg(not(feature = "nostats"))]
+    misses: usize,
 }
 
 impl State {
@@ -29,6 +31,8 @@ impl State {
                 .map(|_| CardCollection::new())
                 .collect::<Vec<_>>(),
             cur_player: 0,
+            #[cfg(not(feature = "nostats"))]
+            misses: 0,
         };
 
         // Deal the cards
@@ -51,6 +55,13 @@ impl State {
     }
 
     #[inline]
+    #[cfg(feature = "trace")]
+    /// Returns the current board
+    pub fn board(&self) -> &CardCollection {
+        &self.board
+    }
+
+    #[inline]
     /// Returns the number of players
     pub fn player_count(&self) -> usize {
         self.player_cards.len()
@@ -63,11 +74,19 @@ impl State {
     }
 
     /// Returns player cards
-    pub fn player_cards(&self) -> &Vec<CardCollection> {
+    #[inline]
+    pub fn all_player_cards(&self) -> &Vec<CardCollection> {
         &self.player_cards
     }
 
+    /// Returns current player's cards
+    #[inline]
+    pub fn cur_player_cards(&self) -> &CardCollection {
+        &self.player_cards[self.cur_player]
+    }
+
     /// Move to the next player
+    #[inline]
     pub fn next_player(&mut self) {
         // Move to next player
         let mut new_player = self.cur_player + 1;
@@ -80,6 +99,7 @@ impl State {
     }
 
     /// Play a card
+    #[inline]
     pub fn play_card(&mut self, card: Card) {
         if card == SEVEN_HEARTS {
             // Other sevens can now be played
@@ -112,7 +132,7 @@ impl State {
         let cards = &self.player_cards[self.cur_player()];
 
         #[cfg(feature = "trace")]
-        println!("Player {} cards: {}", state.cur_player() + 1, cards);
+        println!("Player {} cards: {}", self.cur_player() + 1, cards);
 
         // Calculate playable cards
         let playable_cards = CardCollection::new_from_raw(cards.raw() & self.valid_moves.raw());
@@ -157,12 +177,12 @@ impl State {
         {
             println!(
                 "Player {}: {} total playable: {}",
-                state.cur_player() + 1,
+                self.cur_player() + 1,
                 playable_cards.len(),
                 playable_cards
             );
 
-            if no_consequence_cards.len() > 0 {
+            if !no_consequence_cards.is_empty() {
                 println!(
                     "          {} no consequence: {}",
                     no_consequence_cards.len(),
@@ -170,7 +190,7 @@ impl State {
                 );
             }
 
-            if sequence_cards.len() > 0 {
+            if !sequence_cards.is_empty() {
                 println!(
                     "          {} in sequence: {}",
                     sequence_cards.len(),
@@ -180,5 +200,17 @@ impl State {
         }
 
         (playable_cards, no_consequence_cards, sequence_cards)
+    }
+
+    #[cfg(not(feature = "nostats"))]
+    #[inline]
+    pub fn add_miss(&mut self) {
+        self.misses += 1;
+    }
+
+    #[cfg(not(feature = "nostats"))]
+    #[inline]
+    pub fn get_misses(&self) -> usize {
+        self.misses
     }
 }

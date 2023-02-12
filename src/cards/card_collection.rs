@@ -72,12 +72,37 @@ impl std::fmt::Display for CardCollection {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut string = String::new();
 
-        for (i, c) in self.card_iterator().enumerate() {
-            if i > 0 {
-                string += " ";
+        if f.alternate() {
+            let mut last_suit = ' ';
+
+            for c in self.card_iterator() {
+                let suit = c.suit();
+                let rank = c.rank();
+
+                if suit != last_suit {
+                    if last_suit != ' ' {
+                        string += "] ";
+                    }
+
+                    string += &format!("{suit} [{rank}");
+
+                    last_suit = suit;
+                } else {
+                    string += &format!(" {rank}");
+                }
             }
 
-            string += &format!("{c}");
+            if last_suit != ' ' {
+                string += "] ";
+            }
+        } else {
+            for (i, c) in self.card_iterator().enumerate() {
+                if i > 0 {
+                    string += " ";
+                }
+
+                string += &format!("{c}");
+            }
         }
 
         f.write_str(&string)

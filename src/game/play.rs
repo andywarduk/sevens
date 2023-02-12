@@ -16,7 +16,7 @@ pub fn play(mut state: State, strategy: Strategy) -> BoxFuture<'static, Results>
         'outer: loop {
             'inner: {
                 #[cfg(feature = "trace")]
-                println!("Board: {}", state.board);
+                println!("Board: {:#}", state.board());
 
                 // Calculate playable cards
                 let (playable_cards, no_consequence_cards, sequence_cards) = state.playable_cards();
@@ -35,6 +35,11 @@ pub fn play(mut state: State, strategy: Strategy) -> BoxFuture<'static, Results>
                 let card = match card_set.len().cmp(&1) {
                     Ordering::Less => {
                         // No cards to play
+                        #[cfg(not(feature = "nostats"))]
+                        {
+                            state.add_miss();
+                        }
+
                         break 'inner;
                     }
                     Ordering::Equal => {
@@ -98,9 +103,9 @@ pub fn play(mut state: State, strategy: Strategy) -> BoxFuture<'static, Results>
                 // Play the card
                 state.play_card(card);
 
-                if state.player_cards()[state.cur_player()].is_empty() {
+                if state.cur_player_cards().is_empty() {
                     // Player has won
-                    results.win_for(state.cur_player());
+                    results.record_win(&state);
 
                     #[cfg(feature = "trace")]
                     println!("Win for player {}", state.cur_player() + 1);

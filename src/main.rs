@@ -66,7 +66,7 @@ async fn main() {
 
     println!("Player cards:");
     state
-        .player_cards()
+        .all_player_cards()
         .iter()
         .enumerate()
         .for_each(|(i, p)| p.card_iterator().print(&format!("  Player {}:", i + 1)));

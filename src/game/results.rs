@@ -1,13 +1,17 @@
 #[cfg(not(feature = "nostats"))]
-use std::cmp::Ordering;
+use std::cmp::{max, Ordering};
 
 #[cfg(not(feature = "nostats"))]
 use crate::cards::CardCollection;
 use crate::{numformat::NumFormat, Args};
 
+use super::State;
+
 #[derive(Debug, Default, Clone)]
 pub struct PlayerResults {
     wins: usize,
+    #[cfg(not(feature = "nostats"))]
+    best_win: usize,
     #[cfg(not(feature = "nostats"))]
     misses: usize,
     #[cfg(not(feature = "nostats"))]
@@ -22,6 +26,8 @@ impl std::ops::AddAssign<&PlayerResults> for PlayerResults {
 
         #[cfg(not(feature = "nostats"))]
         {
+            self.best_win = max(self.best_win, other.best_win);
+
             self.misses += other.misses;
 
             other
@@ -64,8 +70,17 @@ impl Results {
     }
 
     #[inline]
-    pub fn win_for(&mut self, player: usize) {
-        self.player_results[player].wins += 1;
+    pub fn record_win(&mut self, state: &State) {
+        self.player_results[state.cur_player()].wins += 1;
+
+        #[cfg(not(feature = "nostats"))]
+        {
+            self.player_results[state.cur_player()].best_win = max(
+                self.player_results[state.cur_player()].best_win,
+                state.get_misses(),
+            );
+        }
+
         self.games += 1;
     }
 
@@ -141,10 +156,18 @@ impl Results {
 
         println!("Wins:");
         for i in 0..args.player_count as usize {
-            println!(
+            print!(
                 "  Player {:<player_str_len$}: {:>wins_len$} {:>pcts_len$}",
                 player_str[i], wins[i], pcts[i]
             );
+
+            #[cfg(not(feature = "nostats"))]
+            print!(
+                " best win: {}",
+                self.player_results[i].best_win.num_format()
+            );
+
+            println!();
         }
     }
 }

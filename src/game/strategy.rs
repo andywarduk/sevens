@@ -31,9 +31,11 @@ impl Strategy {
         #[cfg(not(feature = "nostats"))]
         let mut pref_rank = 0;
 
+        #[allow(clippy::let_and_return)] // For nostats build
         let use_card_set = match self {
             Strategy::NoConsequence => {
                 if !no_consequence_cards.is_empty() {
+                    #[allow(clippy::let_and_return)] // For nostats build
                     // Just choose the first no consequence card
                     let use_card_set = CardCollection::new_from_raw(no_consequence_cards.first());
 
@@ -45,7 +47,6 @@ impl Strategy {
                     use_card_set
                 } else if !sequence_cards.is_empty() {
                     // Sequence cards
-
                     #[cfg(not(feature = "nostats"))]
                     {
                         pref_rank = 1;
@@ -54,7 +55,6 @@ impl Strategy {
                     sequence_cards
                 } else {
                     // Any playable
-
                     #[cfg(not(feature = "nostats"))]
                     {
                         pref_rank = 2;
@@ -65,6 +65,7 @@ impl Strategy {
             }
             Strategy::Preferred => {
                 if !no_consequence_cards.is_empty() {
+                    #[allow(clippy::let_and_return)] // For nostats build
                     // Just choose the first no consequence card and add on the sequence cards
                     let use_card_set = CardCollection::new_from_raw(
                         no_consequence_cards.first() | sequence_cards.raw(),
@@ -80,7 +81,6 @@ impl Strategy {
                     use_card_set
                 } else if !sequence_cards.is_empty() {
                     // Sequence cards
-
                     #[cfg(not(feature = "nostats"))]
                     {
                         pref_rank = 1;
@@ -89,7 +89,6 @@ impl Strategy {
                     sequence_cards
                 } else {
                     // Any playable
-
                     #[cfg(not(feature = "nostats"))]
                     {
                         pref_rank = 2;

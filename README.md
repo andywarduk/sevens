@@ -9,13 +9,13 @@ When deciding to play a card the a player's cards are broken in to three sets:
 
 * All playable cards
 * No consequence cards - cards which can be played which will not allow another player to follow. For example if the player can play the 6♥ and also has the 5♥ or any Ace or King.
-* In-sequence cards - a card which needs to be played in order to play another card in the hand but relies on other players laying the cards in between. For example if the player can play the 6♥ and has the 3♥
+* In-sequence cards - a card which needs to be played in order to play another card in the hand but relies on other players playing the cards in between. For example if the player can play the 6♥ and has the 3♥
 
 The simulation can play with one of the following three strategies:
 
-* preferred (default) - all in-sequence card plus one no-consequence card (if any) is preferred over any other playable card
-* no-consequence - A single no consequence cards is always played if possible. If there are no no-consequence cards to play then the set of in-sequence cards is played. If there are no in-sequence cards then the set of playable cards is used.
-* dumb - all playable cards are considered equal
+* preferred (default) - all in-sequence cards plus one no-consequence card (if any) is preferred over any other playable card
+* no-consequence - A single no consequence cards is always played if possible. If there are no no-consequence cards to play then the set of in-sequence cards is used. If there are no in-sequence cards then the set of playable cards is used.
+* dumb - all playable cards are considered equal.
 
 If there are no playable cards then the player misses a go.
 
@@ -29,15 +29,22 @@ cargo run --release -- <arguments>
 
 ### PGO (Profile Guided Optimisation) build
 
-```sh
-./build_x86linuxgnu.sh
-./run_x86linuxgnu.sh <arguments>
-```
-
-To regenerate PGO data:
+Generate PGO data:
 
 ```sh
 ./buildpgo_x86linuxgnu.sh
+```
+
+Build the binary with the generated PGO data:
+
+```sh
+./build_x86linuxgnu.sh
+```
+
+Run the binary:
+
+```sh
+./run_x86linuxgnu.sh <arguments>
 ```
 
 ### Debug build
@@ -56,7 +63,7 @@ cargo run -F trace -- <arguments>
 
 All runs performed on "Intel(R) Core(TM) i7-10700F CPU @ 2.90GHz" (Comet Lake). 8 cores / 16 threads. Max frequency 4.80 GHz.
 PGO build used for all tests.
-'No consequence' strategy used
+'No consequence' strategy used.
 
 ### No shuffle
 
