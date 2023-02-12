@@ -3,6 +3,7 @@ use std::cmp::Ordering;
 
 #[cfg(not(feature = "nostats"))]
 use crate::cards::CardCollection;
+use crate::{numformat::NumFormat, Args};
 
 #[derive(Debug, Default, Clone)]
 pub struct PlayerResults {
@@ -84,5 +85,66 @@ impl Results {
             .iter_mut()
             .zip(other.player_results.iter())
             .for_each(|(a, b)| *a += b);
+    }
+
+    pub fn print(&self, args: &Args) {
+        println!("Games finished: {}", self.games().num_format());
+
+        let player_str = (1..=args.player_count)
+            .map(|p| format!("{p}"))
+            .collect::<Vec<_>>();
+
+        let player_str_len = player_str.iter().map(|s| s.len()).max().unwrap();
+
+        #[cfg(not(feature = "nostats"))]
+        {
+            // Print plays
+            print!("Plays    {:<player_str_len$}:", "");
+
+            for i in 0..=args.strategy.max_pref_rank() {
+                print!(" {:>12} >1", args.strategy.pref_rank_desc(i));
+                print!(" {:>13} 1", args.strategy.pref_rank_desc(i));
+            }
+            println!(" {:>15}", "Missed Goes");
+
+            for (i, player_results) in self.player_results().iter().enumerate() {
+                print!("  Player {:<player_str_len$}:", player_str[i]);
+
+                for i in 0..=args.strategy.max_pref_rank() {
+                    print!(
+                        " {:>15} {:>15}",
+                        player_results.multi[i as usize].num_format(),
+                        player_results.single[i as usize].num_format()
+                    );
+                }
+
+                println!(" {:>15}", player_results.misses.num_format());
+            }
+        }
+
+        // Print wins
+        let wins = self
+            .player_results()
+            .iter()
+            .map(|w| w.wins.num_format())
+            .collect::<Vec<_>>();
+
+        let wins_len = wins.iter().map(|s| s.len()).max().unwrap();
+
+        let pcts = self
+            .player_results()
+            .iter()
+            .map(|w| format!("({:.1}%)", (w.wins as f32 / self.games() as f32) * 100f32))
+            .collect::<Vec<_>>();
+
+        let pcts_len = pcts.iter().map(|s| s.len()).max().unwrap();
+
+        println!("Wins:");
+        for i in 0..args.player_count as usize {
+            println!(
+                "  Player {:<player_str_len$}: {:>wins_len$} {:>pcts_len$}",
+                player_str[i], wins[i], pcts[i]
+            );
+        }
     }
 }
