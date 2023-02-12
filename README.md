@@ -3,6 +3,22 @@
 Simulation for the card game Sevens, also known as Domino, Spoof, Fan Tan and Parliament.
 <https://en.wikipedia.org/wiki/Domino_(card_game)>
 
+## Strategy
+
+When deciding to play a card the a player's cards are broken in to three sets:
+
+* All playable cards
+* No consequence cards - cards which can be played which will not allow another player to follow. For example if the player can play the 6♥ and also has the 5♥ or any Ace or King.
+* In-sequence cards - a card which needs to be played in order to play another card in the hand but relies on other players laying the cards in between. For example if the player can play the 6♥ and has the 3♥
+
+The simulation can play with one of the following three strategies:
+
+* preferred (default) - all in-sequence card plus one no-consequence card (if any) is preferred over any other playable card
+* no-consequence - A single no consequence cards is always played if possible. If there are no no-consequence cards to play then the set of in-sequence cards is played. If there are no in-sequence cards then the set of playable cards is used.
+* dumb - all playable cards are considered equal
+
+If there are no playable cards then the player misses a go.
+
 ## Running
 
 ### Release build

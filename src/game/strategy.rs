@@ -38,21 +38,27 @@ impl Strategy {
                     let use_card_set = CardCollection::new_from_raw(no_consequence_cards.first());
 
                     #[cfg(not(feature = "nostats"))]
-                    stat_card_set = Some(no_consequence_cards);
+                    {
+                        stat_card_set = Some(no_consequence_cards);
+                    }
 
                     use_card_set
                 } else if !sequence_cards.is_empty() {
                     // Sequence cards
 
                     #[cfg(not(feature = "nostats"))]
-                    pref_rank = 1;
+                    {
+                        pref_rank = 1;
+                    }
 
                     sequence_cards
                 } else {
                     // Any playable
 
                     #[cfg(not(feature = "nostats"))]
-                    pref_rank = 2;
+                    {
+                        pref_rank = 2;
+                    }
 
                     playable_cards
                 }
@@ -65,23 +71,29 @@ impl Strategy {
                     );
 
                     #[cfg(not(feature = "nostats"))]
-                    stat_card_set = Some(CardCollection::new_from_raw(
-                        no_consequence_cards.raw() | sequence_cards.raw(),
-                    ));
+                    {
+                        stat_card_set = Some(CardCollection::new_from_raw(
+                            no_consequence_cards.raw() | sequence_cards.raw(),
+                        ));
+                    }
 
                     use_card_set
                 } else if !sequence_cards.is_empty() {
                     // Sequence cards
 
                     #[cfg(not(feature = "nostats"))]
-                    pref_rank = 1;
+                    {
+                        pref_rank = 1;
+                    }
 
                     sequence_cards
                 } else {
                     // Any playable
 
                     #[cfg(not(feature = "nostats"))]
-                    pref_rank = 2;
+                    {
+                        pref_rank = 2;
+                    }
 
                     playable_cards
                 }

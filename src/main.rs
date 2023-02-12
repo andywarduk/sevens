@@ -1,5 +1,3 @@
-#![feature(stmt_expr_attributes)]
-
 use std::process::exit;
 use std::time::Instant;
 
