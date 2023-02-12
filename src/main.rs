@@ -11,7 +11,7 @@ mod game;
 mod numformat;
 
 use crate::{
-    cards::{print_cards, Deck},
+    cards::{CardIterPrint, Deck},
     game::{play, State, Strategy},
 };
 
@@ -60,16 +60,18 @@ async fn main() {
         deck
     };
 
-    print_cards(deck.iter().cloned(), "Card deck:");
+    deck.iter().cloned().print("Card deck:");
     println!("Card deck hash: {}", deck.hash_string());
 
     // Play
     let state = State::new(args.player_count, deck);
 
     println!("Player cards:");
-    for (i, p) in state.players.iter().enumerate() {
-        print_cards(p.card_iterator(), &format!("  Player {}:", i + 1));
-    }
+    state
+        .players
+        .iter()
+        .enumerate()
+        .for_each(|(i, p)| p.card_iterator().print(&format!("  Player {}:", i + 1)));
 
     println!("Playing games...");
 

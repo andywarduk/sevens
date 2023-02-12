@@ -6,7 +6,7 @@ mod print;
 pub use card::Card;
 pub use card_collection::CardCollection;
 pub use deck::Deck;
-pub use print::print_cards;
+pub use print::CardIterPrint;
 
 pub const SUITS: [char; 4] = ['♥', '♣', '♦', '♠'];
 
