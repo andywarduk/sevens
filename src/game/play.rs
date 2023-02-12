@@ -3,13 +3,11 @@ use std::cmp::Ordering;
 use futures::future::{BoxFuture, FutureExt};
 use tokio::task::JoinSet;
 
-use crate::cards::CardCollection;
-
 use super::{state::State, Results, Strategy};
 
 pub fn play(mut state: State, strategy: Strategy) -> BoxFuture<'static, Results> {
     async move {
-        let mut results = Results::new(state.players.len() as u8);
+        let mut results = Results::new(state.player_count() as u8);
         let mut join_set = JoinSet::new();
 
         #[cfg(feature = "trace")]
@@ -21,7 +19,7 @@ pub fn play(mut state: State, strategy: Strategy) -> BoxFuture<'static, Results>
                 println!("Board: {}", state.board);
 
                 // Calculate playable cards
-                let (playable_cards, no_consequence_cards, sequence_cards) = playable_cards(&state);
+                let (playable_cards, no_consequence_cards, sequence_cards) = state.playable_cards();
 
                 let card_set = strategy.choose_cards(
                     no_consequence_cards,
@@ -49,7 +47,7 @@ pub fn play(mut state: State, strategy: Strategy) -> BoxFuture<'static, Results>
 
                         let first_card = card_iter.next().unwrap();
 
-                        if state.board.len() < 18 && !cfg!(feature = "trace") {
+                        if state.cards_played() < 18 && !cfg!(feature = "trace") {
                             // Thread
                             for c in card_iter {
                                 let mut next_state = state.clone();
@@ -100,7 +98,7 @@ pub fn play(mut state: State, strategy: Strategy) -> BoxFuture<'static, Results>
                 // Play the card
                 state.play_card(card);
 
-                if state.players[state.cur_player()].is_empty() {
+                if state.player_cards()[state.cur_player()].is_empty() {
                     // Player has won
                     results.win_for(state.cur_player());
 
@@ -126,80 +124,4 @@ pub fn play(mut state: State, strategy: Strategy) -> BoxFuture<'static, Results>
         results
     }
     .boxed()
-}
-
-#[inline]
-fn playable_cards(state: &State) -> (CardCollection, CardCollection, CardCollection) {
-    // Get player's cards
-    let cards = &state.players[state.cur_player()];
-
-    #[cfg(feature = "trace")]
-    println!("Player {} cards: {}", state.cur_player() + 1, cards);
-
-    // Calculate playable cards
-    let playable_cards = CardCollection::new_from_raw(cards.raw() & state.plays.raw());
-    let mut no_consequence_cards = CardCollection::new();
-    let mut sequence_cards = CardCollection::new();
-
-    playable_cards.card_iterator().for_each(|c| {
-        let rank_elem = c.rank_elem();
-        let suit_elem = c.suit_elem();
-
-        match rank_elem.cmp(&6) {
-            Ordering::Less => {
-                // Less than 7 - if we have the card one lower as well, or it's an Ace, play this one
-                if rank_elem == 0 || cards.contains(c.one_lower()) {
-                    no_consequence_cards.add(c);
-                } else if cards.contains_one_to_six_except(suit_elem, &c) {
-                    sequence_cards.add(c);
-                }
-            }
-            Ordering::Greater => {
-                // More than 7 - if we have the card one higher as well, or it's a King, play this one
-                if rank_elem == 12 || cards.contains(c.one_higher()) {
-                    no_consequence_cards.add(c);
-                } else if cards.contains_eight_to_king_except(suit_elem, &c) {
-                    sequence_cards.add(c);
-                }
-            }
-            Ordering::Equal => {
-                // A 7. Play if we have the higher and lower card
-                if cards.contains(c.one_lower()) && cards.contains(c.one_higher()) {
-                    no_consequence_cards.add(c);
-                } else if cards.contains_one_to_six_except(suit_elem, &c)
-                    || cards.contains_eight_to_king_except(suit_elem, &c)
-                {
-                    sequence_cards.add(c);
-                }
-            }
-        }
-    });
-
-    #[cfg(feature = "trace")]
-    {
-        println!(
-            "Player {}: {} total playable: {}",
-            state.cur_player() + 1,
-            playable_cards.len(),
-            playable_cards
-        );
-
-        if no_consequence_cards.len() > 0 {
-            println!(
-                "          {} no consequence: {}",
-                no_consequence_cards.len(),
-                no_consequence_cards
-            );
-        }
-
-        if sequence_cards.len() > 0 {
-            println!(
-                "          {} in sequence: {}",
-                sequence_cards.len(),
-                sequence_cards
-            );
-        }
-    }
-
-    (playable_cards, no_consequence_cards, sequence_cards)
 }

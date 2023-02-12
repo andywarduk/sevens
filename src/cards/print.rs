@@ -2,11 +2,8 @@ use atty::Stream;
 
 use super::Card;
 
-pub trait CardIterPrint {
-    fn print(&mut self, title: &str)
-    where
-        Self: std::iter::Iterator<Item = Card>,
-    {
+pub trait CardIterPrint: Iterator<Item = Card> {
+    fn print(&mut self, title: &str) {
         let title_len = title.chars().count();
         let mut format = None;
 
@@ -25,10 +22,7 @@ pub trait CardIterPrint {
         }
     }
 
-    fn print_plain(&mut self, title: &str)
-    where
-        Self: std::iter::Iterator<Item = Card>,
-    {
+    fn print_plain(&mut self, title: &str) {
         print!("{title}");
 
         for c in self {
@@ -37,10 +31,7 @@ pub trait CardIterPrint {
         println!();
     }
 
-    fn print_formatted(&mut self, title: &str, width: usize)
-    where
-        Self: std::iter::Iterator<Item = Card>,
-    {
+    fn print_formatted(&mut self, title: &str, width: usize) {
         let title_len = title.chars().count();
 
         print!("{title}");

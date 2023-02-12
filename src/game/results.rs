@@ -7,13 +7,13 @@ use crate::{numformat::NumFormat, Args};
 
 #[derive(Debug, Default, Clone)]
 pub struct PlayerResults {
-    pub wins: usize,
+    wins: usize,
     #[cfg(not(feature = "nostats"))]
-    pub misses: usize,
+    misses: usize,
     #[cfg(not(feature = "nostats"))]
-    pub single: [usize; 4],
+    single: [usize; 4],
     #[cfg(not(feature = "nostats"))]
-    pub multi: [usize; 4],
+    multi: [usize; 4],
 }
 
 impl std::ops::AddAssign<&PlayerResults> for PlayerResults {
