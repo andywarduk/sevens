@@ -33,12 +33,12 @@ impl CardCollection {
 
     #[inline]
     pub fn contains_one_to_six_except(&self, suit: u32, card: &Card) -> bool {
-        self.0 & (0x3f << (suit * 16)) != card.raw()
+        self.0 & !card.raw() & (0x3f << (suit * 16)) != 0
     }
 
     #[inline]
     pub fn contains_eight_to_king_except(&self, suit: u32, card: &Card) -> bool {
-        self.0 & (0x1f80 << (suit * 16)) != card.raw()
+        self.0 & !card.raw() & (0x1f80 << (suit * 16)) != 0
     }
 
     #[inline]
@@ -127,6 +127,7 @@ mod tests {
         collection.add(card4.clone());
 
         // Test contains A-6 and 8-K
+        println!("{:x} {:x}", collection.raw(), card2.raw());
         assert!(collection.contains_one_to_six_except(0, &card2));
         assert!(!collection.contains_eight_to_king_except(0, &card2));
         assert!(!collection.contains_one_to_six_except(1, &card2));
