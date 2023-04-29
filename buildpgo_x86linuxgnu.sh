@@ -6,8 +6,8 @@ rm -rf "$dir"
 mkdir -p "$dir"
 
 # Build release with no stats for maximum speed
-RUSTFLAGS="-Cprofile-generate=$dir" \
-    cargo build --release -F nostats --target=x86_64-unknown-linux-gnu
+RUSTFLAGS="-C profile-generate=$dir -C target-cpu=native" \
+    cargo build --release -F nostats --target=x86_64-unknown-linux-gnu -v
 
 ./target/x86_64-unknown-linux-gnu/release/sevens -p5 --no-shuffle
 ./target/x86_64-unknown-linux-gnu/release/sevens -p5
