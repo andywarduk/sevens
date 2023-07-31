@@ -693,6 +693,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "numformat"
+version = "0.1.0"
+source = "git+https://github.com/andywarduk/numformat.git#ae454310afed2d0699727767dc0898e1e43b3a83"
+dependencies = [
+ "lazy_static",
+ "num-format",
+]
+
+[[package]]
 name = "object"
 version = "0.24.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -878,7 +887,7 @@ dependencies = [
  "colored",
  "futures",
  "lazy_static",
- "num-format",
+ "numformat",
  "rand",
  "simple-process-stats",
  "term_size",

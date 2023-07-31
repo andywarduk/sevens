@@ -6,7 +6,6 @@ use simple_process_stats::ProcessStats;
 
 mod cards;
 mod game;
-mod numformat;
 
 use crate::{
     cards::{CardIterPrint, Deck},

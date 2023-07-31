@@ -3,7 +3,8 @@ use std::cmp::{max, Ordering};
 
 #[cfg(not(feature = "nostats"))]
 use crate::cards::CardCollection;
-use crate::{numformat::NumFormat, Args};
+use crate::Args;
+use numformat::NumFormat;
 
 use super::State;
 
