@@ -1,4 +1,6 @@
-use atty::Stream;
+use std::io::{stdout, IsTerminal};
+
+use terminal_size::Width;
 
 use super::Card;
 
@@ -7,16 +9,16 @@ pub trait CardIterPrint: Iterator<Item = Card> {
         let title_len = title.chars().count();
         let mut format = None;
 
-        if atty::is(Stream::Stdout) {
-            if let Some((w, _h)) = term_size::dimensions() {
-                if w > title_len + 1 + Card::CARD_COLOURED_WIDTH {
+        if stdout().is_terminal() {
+            if let Some((Width(w), _)) = terminal_size::terminal_size() {
+                if w as usize > title_len + 1 + Card::CARD_COLOURED_WIDTH {
                     format = Some(w);
                 }
             }
         }
 
         if let Some(width) = format {
-            self.print_formatted(title, width);
+            self.print_formatted(title, width as usize);
         } else {
             self.print_plain(title);
         }
