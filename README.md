@@ -29,22 +29,28 @@ cargo run --release -- <arguments>
 
 ### PGO (Profile Guided Optimisation) build
 
-Generate PGO data:
+Build script requires ``cargo pgo`` to be installed:
 
 ```sh
-./buildpgo_x86linuxgnu.sh
+cargo install cargo-pgo
 ```
 
-Build the binary with the generated PGO data:
+Generate PGO binary:
 
 ```sh
-./build_x86linuxgnu.sh
+./buildpgo.sh
 ```
 
-Run the binary:
+or, to disable player statistics feature to run even faster:
 
 ```sh
-./run_x86linuxgnu.sh <arguments>
+./buildpgo.sh -F nostats
+```
+
+Run the PGO binary:
+
+```sh
+./target/x86_64-unknown-linux-gnu/release/sevens
 ```
 
 ### Debug build
@@ -54,6 +60,8 @@ cargo run -- <arguments>
 ```
 
 ### Tracing
+
+Run with the ``trace`` feature switched on to get debug messages:
 
 ```sh
 cargo run -F trace -- <arguments>
