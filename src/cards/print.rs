@@ -1,4 +1,4 @@
-use std::io::{stdout, IsTerminal};
+use std::io::{IsTerminal, stdout};
 
 use terminal_size::Width;
 
@@ -9,12 +9,11 @@ pub trait CardIterPrint: Iterator<Item = Card> {
         let title_len = title.chars().count();
         let mut format = None;
 
-        if stdout().is_terminal() {
-            if let Some((Width(w), _)) = terminal_size::terminal_size() {
-                if w as usize > title_len + 1 + Card::CARD_COLOURED_WIDTH {
-                    format = Some(w);
-                }
-            }
+        if stdout().is_terminal()
+            && let Some((Width(w), _)) = terminal_size::terminal_size()
+            && w as usize > title_len + 1 + Card::CARD_COLOURED_WIDTH
+        {
+            format = Some(w);
         }
 
         if let Some(width) = format {

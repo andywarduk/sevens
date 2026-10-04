@@ -1,9 +1,9 @@
 #[cfg(not(feature = "nostats"))]
-use std::cmp::{max, Ordering};
+use std::cmp::{Ordering, max};
 
+use crate::Args;
 #[cfg(not(feature = "nostats"))]
 use crate::cards::CardCollection;
-use crate::Args;
 use numformat::NumFormat;
 
 use super::State;

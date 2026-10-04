@@ -3,7 +3,7 @@ use std::cmp::Ordering;
 use futures::future::{BoxFuture, FutureExt};
 use tokio::task::JoinSet;
 
-use super::{state::State, Results, Strategy};
+use super::{Results, Strategy, state::State};
 
 pub fn play(mut state: State, strategy: Strategy) -> BoxFuture<'static, Results> {
     async move {

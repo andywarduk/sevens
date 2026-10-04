@@ -1,8 +1,8 @@
-use std::collections::{vec_deque::Iter, VecDeque};
+use std::collections::{VecDeque, vec_deque::Iter};
 
-use rand::Rng;
+use rand::RngExt;
 
-use super::{Card, CARD_HASH, RANKS, SUITS};
+use super::{CARD_HASH, Card, RANKS, SUITS};
 
 #[derive(Debug)]
 pub struct Deck(VecDeque<Card>);
@@ -46,10 +46,10 @@ impl Deck {
     pub fn shuffle(&mut self) {
         let mut shuffled = VecDeque::new();
 
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
 
         while !self.0.is_empty() {
-            let elem = rng.gen_range(0..self.0.len());
+            let elem = rng.random_range(0..self.0.len());
             let card = self.0.remove(elem).unwrap();
             shuffled.push_back(card);
         }
@@ -65,7 +65,7 @@ impl Deck {
         self.0.iter().map(|c| c.hash_val()).collect()
     }
 
-    pub fn iter(&self) -> Iter<Card> {
+    pub fn iter(&self) -> Iter<'_, Card> {
         self.0.iter()
     }
 }

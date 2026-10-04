@@ -9,7 +9,7 @@ mod game;
 
 use crate::{
     cards::{CardIterPrint, Deck},
-    game::{play, State, Strategy},
+    game::{State, Strategy, play},
 };
 
 #[derive(Parser)]
@@ -72,17 +72,13 @@ async fn main() {
 
     println!("Playing games...");
 
-    let process_stats_start = ProcessStats::get()
-        .await
-        .expect("could not get stats for running process");
+    let process_stats_start = ProcessStats::get().expect("could not get stats for running process");
     let start = Instant::now();
 
     let results = play(state, args.strategy).await;
 
     let duration = start.elapsed();
-    let process_stats_end = ProcessStats::get()
-        .await
-        .expect("could not get stats for running process");
+    let process_stats_end = ProcessStats::get().expect("could not get stats for running process");
 
     println!("Time elapsed: {duration:?}");
     println!(

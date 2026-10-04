@@ -1,6 +1,6 @@
 use colored::*;
 
-use super::{CARD_HASH, RANKS, SUITS, SUIT_COLOUR};
+use super::{CARD_HASH, RANKS, SUIT_COLOUR, SUITS};
 
 #[derive(Clone, PartialEq)]
 pub struct Card(u64);
@@ -19,10 +19,10 @@ impl std::fmt::Display for Card {
 
 impl Card {
     pub fn new(suit: &char, rank: &str) -> Option<Self> {
-        if let Some(suit) = SUITS.iter().position(|s| s == suit) {
-            if let Some(rank) = RANKS.iter().position(|r| *r == rank) {
-                return Some(Self::new_from_elems(suit, rank));
-            }
+        if let Some(suit) = SUITS.iter().position(|s| s == suit)
+            && let Some(rank) = RANKS.iter().position(|r| *r == rank)
+        {
+            return Some(Self::new_from_elems(suit, rank));
         }
 
         None
